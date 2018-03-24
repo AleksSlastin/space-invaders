@@ -3,6 +3,7 @@ import pygame
 from pygame.sprite import Group
 
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
 import game_functions as gf
 
@@ -15,6 +16,7 @@ def run_game():
     pygame.display.set_caption("Space Invaders")
 
     ship = Ship(si_settings, screen)
+    stats = GameStats(si_settings)
 
     bullets = Group()
     aliens = Group()
@@ -23,9 +25,10 @@ def run_game():
 
     while True:
         gf.check_events(si_settings, screen, ship, bullets)
-        ship.update()
-        gf.update_bullets(bullets)
-        gf.update_aliens(si_settings, aliens)
+        if stats.game_active:
+            ship.update()
+            gf.update_bullets(si_settings, screen, ship, aliens, bullets)
+            gf.update_aliens(si_settings, stats, screen, ship, aliens, bullets)
         gf.update_screen(si_settings, screen, ship, aliens, bullets)
 
 run_game()
